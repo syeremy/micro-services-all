@@ -1,0 +1,4 @@
+1. Levantar Elasticsearch con el script: ./elastic.sh
+
+2. Ejecutar la aplicación con: gradle bootRun
+

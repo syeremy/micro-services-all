@@ -1,0 +1,13 @@
+1. Levantar RabbitMQ con el script: ./rabbit.sh
+
+2. Ejecutar la aplicación con: gradle bootRun
+
+3. Abrir un navegador en la url: http://localhost:8080/hystrix
+
+4. En el dashboard de Hystrix, introducir la url: http://localhost:8080/hystrix.stream y dar click en 'Monitor Stream'
+
+5. Observar el dashboard y dejarlo visible
+
+6. Ejecutar una prueba de carga con WRK: wrk -c 5 -d 120s -t 2 http://localhost:8080/mensaje
+
+7. Observar el dashboard nuevamente
