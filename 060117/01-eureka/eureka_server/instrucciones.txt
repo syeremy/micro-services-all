@@ -1,0 +1,19 @@
+Notas:
+
+${hostname} es la dirección IP o nombre de la maquina donde ejecutas los ejercicios.
+
+1. Ejecutar esta aplicación con: ./gradlew bootRun. Dejar corriendo la aplicación.
+2. Visitar en el browser el dashboard de Eureka: http://${hostname}:8761/
+3. Abrir otra terminal, ir a la carpeta del proyecto "eureka_client"
+4. Crear el paquete de la aplicación con: ./gradlew bootRepackage
+5. Ejecutar el script: ./client.sh. Dejar corriendo la aplicación
+6. Abrir otra terminal, ir a la carpeta del proyecto "eureka_client"
+7. Ejecutar el script: ./client.sh 1. Dejar corriendo la aplicación
+8. Abrir otra terminal, ir a la carpeta del proyecto "eureka_client"
+9. Ejecutar el script: ./client.sh 2. Dejar corriendo la aplicación
+10. Abrir otra terminal, ir a la carpeta del proyecto "eureka_client"
+11. Ejecutar el script: ./client.sh 3. Dejar corriendo la aplicación
+12. Visitar en el browser el dashboard de Eureka: http://${hostname}:8761/
+   Observar los servicios registrados, puede demorarse para mostrar todo (Eureka es eventualmente consistente)
+13. Con un cliente de http o con un browser, invocar: http://localhost:8080/serviceDummy
+14. Observar las instancias registradas

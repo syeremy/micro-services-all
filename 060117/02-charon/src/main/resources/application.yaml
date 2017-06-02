@@ -1,0 +1,23 @@
+management.security.enabled: false
+
+charon.mappings:
+  -
+    name: google mapping
+    path: /google
+    destinations: http://www.google.com.pe/
+    strip-path: true
+  -
+    name: facebook mapping
+    path: /facebook
+    destinations: http://facebook.com
+    strip-path: true
+  -
+    name: linkedin mapping
+    path: /linkedin
+    destinations: http://www.linkedin.com/
+    strip-path: true
+  -
+    name: youtube mapping
+    path: /youtube
+    destinations: http://www.youtube.com/
+    strip-path: true

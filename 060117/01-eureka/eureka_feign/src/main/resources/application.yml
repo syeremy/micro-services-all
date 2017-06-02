@@ -1,0 +1,17 @@
+spring.application.name: client
+
+server.port: 9090
+
+instance.id: ${random.value}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    #leaseRenewalIntervalInSeconds: 1
+    #leaseExpirationDurationInSeconds: 1
+    metadata-map:
+     instanceId: ${instance.id}
