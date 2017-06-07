@@ -1,0 +1,64 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+	baseName = 'app'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
+	compile('org.springframework.cloud:spring-cloud-starter-zuul')
+	compile('org.projectlombok:lombok')
+	compile 'org.springframework.boot:spring-boot-starter-security'
+
+	compile('org.codehaus.groovy:groovy-all:2.4.7')
+	
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+}
+
+ext {
+  springCloudVersion = 'Dalston.SR1'
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+
+//Borramos el archivo empacado
+clean.doFirst {
+  delete "../ms_dia18/gateway/app.jar"
+}
+
+//Copiamos el archivo empacado al directorio de Dockerfile
+task prepareApp(type: Copy) {
+  from 'build/libs/app.jar'
+  into '../ms_dia18/gateway'
+}
+
+//prepareApp.dependsOn prepareDocker
+build.dependsOn prepareApp

@@ -1,0 +1,16 @@
+management.security.enabled: false
+
+spring.application.name: Product_Catalog
+
+instance.id: ${random.value}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+     instanceId: ${instance.id}
+

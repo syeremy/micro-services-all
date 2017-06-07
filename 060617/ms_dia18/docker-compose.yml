@@ -1,0 +1,65 @@
+version: '2' 
+services:
+  gateway:
+    build: gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+    ports: 
+      - "9090:8080" 
+    depends_on:
+      - registry
+    restart: always
+  registry:
+    build: registry
+    ports: 
+      - "8761:8761" 
+    restart: always
+  productcatalogservice:
+    build: productcatalogservice
+    environment:
+      - SPRING_DATA_ELASTICSEARCH_CLUSTER-NODES=elasticsearch:9300      
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+      - SPRING_BOOT_ADMIN_URL=http://monitor:8080
+    depends_on:
+      - elasticsearch
+      - registry
+    restart: always
+  customerservice:
+    build: customerservice
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cacti_data_customer
+      - SPRING_DATASOURCE_USERNAME=cacti
+      - SPRING_DATASOURCE_PASSWORD=cacti
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+      - SPRING_BOOT_ADMIN_URL=http://monitor:8080
+    depends_on:
+      - postgres
+      - rabbitmq
+      - registry
+    restart: always
+  postgres:
+    build: postgres
+    environment:
+      # le cambiamos el password al usuario de postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ../../postgres:/var/lib/postgresql/data
+    ports:
+      - "2345:5432"
+    restart: always
+  rabbitmq:
+    image: rabbitmq:3.6.9-management-alpine
+    ports:
+      - "15672:15672"
+    restart: always
+  elasticsearch:
+    image: elasticsearch:2.4.4-alpine
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: always
+  monitor:
+    build: monitor
+    ports: 
+      - "8081:8080" 

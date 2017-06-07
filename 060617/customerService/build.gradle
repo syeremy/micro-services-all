@@ -1,0 +1,111 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+	//Le dice al plugin de administración de dependencias, que use la version 4.3 de hibernate
+	ext['hibernate.version'] = '4.3.11.Final'
+}
+
+plugins {
+  id "org.asciidoctor.convert" version "1.5.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.asciidoctor.convert'
+
+jar {
+	baseName = 'app'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-amqp')
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
+	compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.projectlombok:lombok')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile "joda-time:joda-time:2.9.4"
+	compile "org.jadira.usertype:usertype.extended:4.0.0.GA"
+	compile('org.codehaus.groovy:groovy-all:2.4.8')
+	runtime('org.postgresql:postgresql')
+	runtime 'org.flywaydb:flyway-core:3.2.1'
+	
+  compile 'de.codecentric:spring-boot-admin-starter-client:1.5.0'
+
+  compile 'org.jolokia:jolokia-core'
+
+
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+  testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-1"
+  testCompile "org.spockframework:spock-spring:1.1-groovy-2.4-rc-1"
+
+  testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.1.0.RELEASE') {
+    exclude module: 'spring-restdocs-core'
+  }
+
+  testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RELEASE'
+
+
+}
+
+ext {
+  springCloudVersion = 'Dalston.SR1'
+  snippetsDir = file('./src/docs/generated-snippets')
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+//Borramos el archivo empacado
+clean.doFirst {
+  delete "../ms_dia18/customerservice/app.jar"
+  delete "./src/docs/generated-snippets/"
+}
+
+test {
+  outputs.dir snippetsDir
+}
+
+asciidoctorj {
+  version = '1.5.4'
+}
+
+asciidoctor {
+  inputs.dir snippetsDir
+  outputDir "build/asciidoc"
+  dependsOn test
+  sourceDir 'src/main/asciidoctor'
+  backends 'html'
+  attributes 'snippets': snippetsDir
+}
+
+//Copiamos el archivo empacado al directorio de Dockerfile
+task prepareApp(type: Copy) {
+  from 'build/libs/app.jar'
+  into '../ms_dia18/customerservice'
+}
+
+//prepareApp.dependsOn prepareDocker
+build.dependsOn prepareApp
+
