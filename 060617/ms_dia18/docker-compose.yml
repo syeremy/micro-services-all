@@ -23,6 +23,7 @@ services:
     depends_on:
       - elasticsearch
       - registry
+      - monitor
     restart: always
   customerservice:
     build: customerservice
@@ -37,6 +38,7 @@ services:
       - postgres
       - rabbitmq
       - registry
+      - monitor
     restart: always
   postgres:
     build: postgres
@@ -63,3 +65,4 @@ services:
     build: monitor
     ports: 
       - "8081:8080" 
+    restart: always
